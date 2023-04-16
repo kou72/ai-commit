@@ -2,6 +2,7 @@
 
 const axios = require("axios");
 const { execSync } = require("child_process");
+const { system, diff1, response1 } = require("./prompt.js");
 
 // 環境変数からAPIキーを読み込む
 const apiKey = process.env.AI_COMMIT_KEY;
@@ -13,17 +14,7 @@ if (!apiKey) {
 }
 
 (async () => {
-  const diff = execSync("git diff").toString();
-  const prompt = `以下はgit diff の出力結果である。この内容からcommitメッセージとしてふさわしいコメントを生成してください。ただし以下のフォーマットで作成することとしてください
-
-test.txt : 文字列をtextからtestに変更
-
-以下 git diff の内容
-
-`;
-
-  const input = prompt + diff;
-
+  const diff = execSync("git add -N . && git --no-pager diff").toString();
   const URL = "https://api.openai.com/v1/chat/completions";
   try {
     console.log("リクエスト中...");
@@ -31,9 +22,23 @@ test.txt : 文字列をtextからtestに変更
       URL,
       {
         model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: input }],
-        temperature: 0.1,
-        max_tokens: 1000,
+        messages: [
+          {
+            role: "system",
+            content: system,
+          },
+          {
+            role: "user",
+            content: diff1,
+          },
+          {
+            role: "assistant",
+            content: response1,
+          },
+          { role: "user", content: diff },
+        ],
+        temperature: 0,
+        max_tokens: 3000,
       },
       {
         headers: {
@@ -44,7 +49,7 @@ test.txt : 文字列をtextからtestに変更
     );
 
     const commitMessage = response.data.choices[0].message.content;
-    console.log("生成されたコミットメッセージ: ", commitMessage);
+    console.log("生成されたコミットメッセージ: \n --- \n\n", commitMessage, "\n\n --- \n");
 
     process.stdout.write("このメッセージでコミットしますか？ y/n: ");
     process.stdin.on("data", (data) => {

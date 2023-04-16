@@ -1,0 +1,54 @@
+diff --git a/index.js b/index.js
+index f234e63..96cc4ee 100644
+--- a/index.js
++++ b/index.js
+@@ -2,6 +2,7 @@
+ 
+ const axios = require("axios");
+ const { execSync } = require("child_process");
++const prompt = require("./prompt.js");
+ 
+ // 迺ｰ蠅・､画焚縺九ｉAPI繧ｭ繝ｼ繧定ｪｭ縺ｿ霎ｼ繧
+ const apiKey = process.env.AI_COMMIT_KEY;
+@@ -14,16 +15,7 @@ if (!apiKey) {
+ 
+ (async () => {
+   const diff = execSync("git diff").toString();
+-  const prompt = `莉･荳九・git diff 縺ｮ蜃ｺ蜉帷ｵ先棡縺ｧ縺ゅｋ縲ゅ％縺ｮ蜀・ｮｹ縺九ｉcommit繝｡繝・そ繝ｼ繧ｸ縺ｨ縺励※縺ｵ縺輔ｏ縺励＞繧ｳ繝｡繝ｳ繝医ｒ逕滓・縺励※縺上□縺輔＞縲ゅ◆縺縺嶺ｻ･荳九・繝輔か繝ｼ繝槭ャ繝医〒菴懈・縺吶ｋ縺薙→縺ｨ縺励※縺上□縺輔＞
+-
+-test.txt : 譁・ｭ怜・繧稚ext縺九ｉtest縺ｫ螟画峩
+-
+-莉･荳・git diff 縺ｮ蜀・ｮｹ
+-
+-`;
+-
+-  const input = prompt + diff;
+-
++  console.log(diff);
+   const URL = "https://api.openai.com/v1/chat/completions";
+   try {
+     console.log("繝ｪ繧ｯ繧ｨ繧ｹ繝井ｸｭ...");
+@@ -31,7 +23,13 @@ test.txt : 譁・ｭ怜・繧稚ext縺九ｉtest縺ｫ螟画峩
+       URL,
+       {
+         model: "gpt-3.5-turbo",
+-        messages: [{ role: "user", content: input }],
++        messages: [
++          {
++            role: "system",
++            content: prompt,
++          },
++          { role: "user", content: diff },
++        ],
+         temperature: 0.1,
+         max_tokens: 1000,
+       },
+@@ -44,7 +42,7 @@ test.txt : 譁・ｭ怜・繧稚ext縺九ｉtest縺ｫ螟画峩
+     );
+ 
+     const commitMessage = response.data.choices[0].message.content;
+-    console.log("逕滓・縺輔ｌ縺溘さ繝溘ャ繝医Γ繝・そ繝ｼ繧ｸ: ", commitMessage);
++    console.log("逕滓・縺輔ｌ縺溘さ繝溘ャ繝医Γ繝・そ繝ｼ繧ｸ: \n --- \n\n ", commitMessage, "\n\n --- \n");
+ 
+     process.stdout.write("縺薙・繝｡繝・そ繝ｼ繧ｸ縺ｧ繧ｳ繝溘ャ繝医＠縺ｾ縺吶°・・y/n: ");
+     process.stdin.on("data", (data) => {
