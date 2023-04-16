@@ -36,6 +36,7 @@ npm link
 <details>
 <summary>Bashの場合</summary>
 
+  
 環境変数を一時的に設定するには以下のコマンドを実行します。
 
 ```
@@ -66,6 +67,7 @@ source ~/.bash_profile
 <details>
 <summary>PowerShellの場合</summary>
 
+  
 環境変数を一時的に設定するには以下のコマンドを実行します。
 
 ```
@@ -80,11 +82,14 @@ $env:AI_COMMIT_KEY = "your_api_key_here"
 
 この設定を適用するには、PowerShellを再起動する必要があります。
 
+---
+
 </details>
 
 <details>
 <summary>WindowsのGUIを使用する場合</summary>
 
+  
 WindowsでGUIを使用して環境変数を設定する方法は以下の通りです：
 
 1. コントロールパネルを開きます。これは、スタートメニューの検索ボックスに「コントロールパネル」と入力することでアクセスできます。
@@ -102,6 +107,8 @@ WindowsでGUIを使用して環境変数を設定する方法は以下の通り�
 7. 「環境変数」ダイアログと「システムのプロパティ」ダイアログで「OK」をクリックして設定を保存し、ダイアログを閉じます。
 
 この設定を適用するには、PowerShellを再起動する必要があります。
+
+---
 
 </details>
 
