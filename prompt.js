@@ -1,4 +1,4 @@
-const system = `git diff の結果から、対象のファイルと変更点、変更内容を分析し、以下のフォーマットで日本語でコミットメッセージを作成せよ。
+const system = `git diff の結果から、対象のファイルと変更点、変更内容を分析し、以下のフォーマットで日本語のコミットメッセージを作成せよ。
 
 変更ファイル名
 - 変更内容
@@ -21,7 +21,7 @@ const system = `git diff の結果から、対象のファイルと変更点、�
 - 変更内容
 - 以下解析された変更内容を続ける`;
 
-const diff1 = `diff --git a/hello.js b/hello.js
+const diff_sample = `diff --git a/hello.js b/hello.js
 new file mode 100644
 index 0000000..92dd441
 --- /dev/null
@@ -44,7 +44,7 @@ index fa77789..d3c80d2 100644
 
  const args = process.argv.slice(2);`;
 
-const response1 = `hello.js
+const res_sample = `hello.js
 - "Hello"という文字列を定義
 - hello変数をエクスポート
 
@@ -52,4 +52,4 @@ index.js
 - hello.jsを読み込むために、require関数を使って"./prompt.js"を読み込み
 - test関数内で、"Hello"の代わりにhello変数を使って挨拶を表示するように変更`;
 
-module.exports = { system, diff1, response1 };
+module.exports = { system, diff_sample, res_sample };

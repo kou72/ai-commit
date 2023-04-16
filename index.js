@@ -2,7 +2,7 @@
 
 const axios = require("axios");
 const { execSync } = require("child_process");
-const { system, diff1, response1 } = require("./prompt.js");
+const { system, diff_sample, res_sample } = require("./prompt.js");
 
 // 環境変数からAPIキーを読み込む
 const apiKey = process.env.AI_COMMIT_KEY;
@@ -33,8 +33,8 @@ if (!apiKey) {
         model: "gpt-3.5-turbo",
         messages: [
           { role: "system", content: system },
-          { role: "user", content: diff1 },
-          { role: "assistant", content: response1 },
+          { role: "user", content: diff_sample },
+          { role: "assistant", content: res_sample },
           { role: "user", content: diff },
         ],
         temperature: 0,
