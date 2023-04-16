@@ -24,8 +24,6 @@ npm install
 npm link
 ```
 
-💡`npm link` は、現在のパッケージ（プロジェクト）を、グローバルにインストールされたパッケージのように扱うためのコマンドです。これにより、開発中のパッケージを他のプロジェクトやシステム全体で簡単に利用できるようになります。
-
 4. OpenAIの管理画面 (https://platform.openai.com/account/api-keys) からAPIキーを取得します。
 
 5. 環境変数 `AI_COMMIT_KEY` に、取得したOpenAIのAPIキーを設定します。

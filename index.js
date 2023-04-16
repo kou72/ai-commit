@@ -19,7 +19,9 @@ if (!apiKey) {
   const gitAddCommand = targetFile
     ? `git add -N --ignore-removal ${targetFile}`
     : "git add -N --ignore-removal .";
-  const diff = execSync(`${gitAddCommand} && git --no-pager diff ${targetFile || ""}`).toString();
+  const diff = execSync(
+    `${gitAddCommand} && git --no-pager diff --unified=0 ${targetFile || ""}`
+  ).toString();
   if (!diff) return console.log("diffが得られませんでした");
 
   const URL = "https://api.openai.com/v1/chat/completions";
