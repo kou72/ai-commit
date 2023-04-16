@@ -14,7 +14,14 @@ if (!apiKey) {
 }
 
 (async () => {
-  const diff = execSync("git add -N . && git --no-pager diff").toString();
+  // コマンドライン引数からファイル名を取得
+  const targetFile = process.argv[2];
+  const gitAddCommand = targetFile
+    ? `git add -N --ignore-removal ${targetFile}`
+    : "git add -N --ignore-removal .";
+  const diff = execSync(`${gitAddCommand} && git --no-pager diff ${targetFile || ""}`).toString();
+  if (!diff) return console.log("diffが得られませんでした");
+
   const URL = "https://api.openai.com/v1/chat/completions";
   try {
     console.log("リクエスト中...");
