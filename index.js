@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 const fs = require("fs");
-const os = require("os");
 const path = require("path");
 const axios = require("axios");
 const { execSync } = require("child_process");
