@@ -2,6 +2,11 @@
 
 git diff の出力からコミットメッセージを生成するプログラムです。
 
+## 実行環境
+
+- Node.js v18 以上
+- Open AI への登録
+
 ## 使い方
 
 1. GitHubからコードを取得します。
@@ -24,7 +29,7 @@ npm install
 npm link
 ```
 
-4. OpenAIの管理画面 (https://platform.openai.com/account/api-keys) からAPIキーを取得します。
+4. [OpenAIの管理画面](https://platform.openai.com/account/api-keys) からAPIキーを取得します。
 
 5. 環境変数 `AI_COMMIT_KEY` に、取得したOpenAIのAPIキーを設定します。
 
