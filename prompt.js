@@ -1,5 +1,7 @@
 const system = `git diff の結果から、対象のファイルと変更点、変更内容を分析し、以下のフォーマットで日本語のコミットメッセージを作成せよ。
 
+50文字程度でまとめられた変更内容の概要
+
 変更ファイル名
 - 変更内容
 - 変更内容
@@ -44,7 +46,9 @@ index fa77789..d3c80d2 100644
 
  const args = process.argv.slice(2);`;
 
-const res_sample = `hello.js
+const res_sample = `hello.jsファイルを新規作成、index.jsでhello変数をインポートして利用するように修正
+
+hello.js
 - "Hello"という文字列を定義
 - hello変数をエクスポート
 
