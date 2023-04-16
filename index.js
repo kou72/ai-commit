@@ -1,7 +1,12 @@
 #!/usr/bin/env node
-
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
 const axios = require("axios");
 const { execSync } = require("child_process");
+const { promisify } = require("util");
+const execAsync = promisify(require("child_process").exec);
+
 const { system, diff_sample, res_sample } = require("./prompt.js");
 
 // 環境変数からAPIキーを読み込む
@@ -56,13 +61,20 @@ if (!apiKey) {
     console.log(`生成されたコミットメッセージ\n---\n\n${commitMessage}\n\n---\n`);
 
     process.stdout.write("このメッセージでコミットしますか？ y/n (y): ");
-    process.stdin.on("data", (data) => {
+    process.stdin.on("data", async (data) => {
       const answer = data.toString().trim().toLowerCase();
       if (answer === "y" || answer === "") {
+        // gitのルートディレクトリを取得
+        const { stdout } = await execAsync("git rev-parse --show-toplevel");
+        const gitRoot = stdout.trim();
+
+        // コミットメッセージファイルを作成し、コミットメッセージを書き込む
+        const commitMessageFilePath = path.join(gitRoot, ".git", "ai-commit-message.txt");
+        fs.writeFileSync(commitMessageFilePath, commitMessage, "utf8");
+
         execSync("git add .");
-        const escapedCommitMessage = commitMessage.replace(/"/g, '\\"').replace(/\n/g, "\\n");
-        execSync(`git commit -m "${escapedCommitMessage}"`);
-        // execSync(`git commit -m "${commitMessage}"`);
+        // git commit -Fでコミットメッセージファイルを参照する
+        execSync(`git commit -F "${commitMessageFilePath}"`);
         console.log("コミットが完了しました。");
         process.exit(0);
       } else if (answer === "n") {
