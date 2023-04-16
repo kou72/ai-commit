@@ -60,7 +60,9 @@ if (!apiKey) {
       const answer = data.toString().trim().toLowerCase();
       if (answer === "y" || answer === "") {
         execSync("git add .");
-        execSync(`git commit -m "${commitMessage}"`);
+        const escapedCommitMessage = commitMessage.replace(/"/g, '\\"').replace(/\n/g, "\\n");
+        execSync(`git commit -m "${escapedCommitMessage}"`);
+        // execSync(`git commit -m "${commitMessage}"`);
         console.log("コミットが完了しました。");
         process.exit(0);
       } else if (answer === "n") {
