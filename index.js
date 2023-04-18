@@ -71,7 +71,7 @@ if (!apiKey) {
         const commitMessageFilePath = path.join(gitRoot, ".git", "ai-commit-message.txt");
         fs.writeFileSync(commitMessageFilePath, commitMessage, "utf8");
 
-        execSync("git add .");
+        execSync(`git add ${targetFile || "."}`);
         // git commit -Fでコミットメッセージファイルを参照する
         execSync(`git commit -F "${commitMessageFilePath}"`);
         console.log("コミットが完了しました。");
