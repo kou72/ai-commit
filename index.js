@@ -18,11 +18,15 @@ if (!apiKey) {
 }
 
 (async () => {
+  // gitのルートディレクトリを取得
+  const { stdout } = await execAsync("git rev-parse --show-toplevel");
+  const gitRoot = stdout.trim();
+  const gitAddCommand = `git add -N --ignore-removal ${gitRoot}`;
+
   // --cached オプション確認
   const args = process.argv.slice(2);
   const useCached = args.includes("--cached");
   const gitDiffCommand = `git --no-pager diff --unified=0 ${useCached ? "--cached" : ""}`;
-  const gitAddCommand = "git add -N --ignore-removal .";
 
   const diff = execSync(`${gitAddCommand} && ${gitDiffCommand}`).toString();
   if (!diff) return console.log("diffが得られませんでした");
@@ -62,15 +66,11 @@ if (!apiKey) {
     process.stdin.on("data", async (data) => {
       const answer = data.toString().trim().toLowerCase();
       if (answer === "y" || answer === "") {
-        // gitのルートディレクトリを取得
-        const { stdout } = await execAsync("git rev-parse --show-toplevel");
-        const gitRoot = stdout.trim();
-
         // コミットメッセージファイルを作成し、コミットメッセージを書き込む
         const commitMessageFilePath = path.join(gitRoot, ".git", "ai-commit-message.txt");
         fs.writeFileSync(commitMessageFilePath, commitMessage, "utf8");
 
-        if (!useCached) execSync("git add .");
+        if (!useCached) execSync(`git add ${gitRoot}`);
         // git commit -Fでコミットメッセージファイルを参照する
         execSync(`git commit -F "${commitMessageFilePath}"`);
         console.log("コミットが完了しました。");
