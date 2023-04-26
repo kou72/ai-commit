@@ -18,14 +18,13 @@ if (!apiKey) {
 }
 
 (async () => {
-  // コマンドライン引数からファイル名を取得
-  const targetFile = process.argv[2];
-  const gitAddCommand = targetFile
-    ? `git add -N --ignore-removal ${targetFile}`
-    : "git add -N --ignore-removal .";
-  const diff = execSync(
-    `${gitAddCommand} && git --no-pager diff --unified=0 ${targetFile || ""}`
-  ).toString();
+  // --cached オプション確認
+  const args = process.argv.slice(2);
+  const useCached = args.includes("--cached");
+  const gitDiffCommand = `git --no-pager diff --unified=0 ${useCached ? "--cached" : ""}`;
+  const gitAddCommand = "git add -N --ignore-removal .";
+
+  const diff = execSync(`${gitAddCommand} && ${gitDiffCommand}`).toString();
   if (!diff) return console.log("diffが得られませんでした");
 
   const URL = "https://api.openai.com/v1/chat/completions";
@@ -71,7 +70,7 @@ if (!apiKey) {
         const commitMessageFilePath = path.join(gitRoot, ".git", "ai-commit-message.txt");
         fs.writeFileSync(commitMessageFilePath, commitMessage, "utf8");
 
-        execSync(`git add ${targetFile || "."}`);
+        if (!useCached) execSync("git add .");
         // git commit -Fでコミットメッセージファイルを参照する
         execSync(`git commit -F "${commitMessageFilePath}"`);
         console.log("コミットが完了しました。");
@@ -96,7 +95,7 @@ if (!apiKey) {
       console.log(
         "error: requested token が超過しています",
         exceededTokens,
-        "。対象を限定してください。\n ex) ai-commit index.js"
+        "。--cached オプションを利用して対象を限定してください。\n ex) git add index.js && ai-commit --cached"
       );
     }
   }
