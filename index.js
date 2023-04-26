@@ -83,13 +83,7 @@ if (!apiKey) {
       }
     });
   } catch (error) {
-    const errorData = error.response.data;
-
-    // デバッグ用
-    // console.log(errorData);
-
-    const errorCode = errorData.error.code;
-    if (errorCode === "context_length_exceeded") {
+    if (error.response.data.error.code === "context_length_exceeded") {
       const errorMessage = error.response.data.error.message;
       exceededTokens = checkExceededTokens(errorMessage);
       console.log(
@@ -97,6 +91,10 @@ if (!apiKey) {
         exceededTokens,
         "。--cached オプションを利用して対象を限定してください。\n ex) git add index.js && ai-commit --cached"
       );
+    } else if (error.message) {
+      console.log("error: " + error.message);
+    } else {
+      console.log("error: " + error);
     }
   }
 })();
