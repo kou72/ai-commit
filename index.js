@@ -17,6 +17,17 @@ if (!apiKey) {
   process.exit(1);
 }
 
+// オプションの検証
+const validateOptions = (args) => {
+  const validOptions = ["--cached"];
+  for (const arg of args) {
+    if (!validOptions.includes(arg)) {
+      console.error(`無効なオプション: ${arg}`);
+      process.exit(1);
+    }
+  }
+};
+
 (async () => {
   // gitのルートディレクトリを取得
   const { stdout } = await execAsync("git rev-parse --show-toplevel");
@@ -25,6 +36,8 @@ if (!apiKey) {
 
   // --cached オプション確認
   const args = process.argv.slice(2);
+  // オプションの検証
+  validateOptions(args);
   const useCached = args.includes("--cached");
   const gitDiffCommand = `git --no-pager diff --unified=0 ${useCached ? "--cached" : ""}`;
 
