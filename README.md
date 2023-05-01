@@ -118,10 +118,10 @@ WindowsでGUIを使用して環境変数を設定する方法は以下の通り�
 ai-commit
 ```
 
-または、特定のファイルに対してコミットメッセージを生成する場合はファイル名を指定します
+または、`--cached` オプションを利用してステージング済みのファイルを対象に実行します。
 
 ```
-ai-commit file_name.js
+git add index.js && ai-commit --cached
 ```
 ## 処理フロー
 
